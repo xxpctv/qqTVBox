@@ -31,7 +31,20 @@
             android:textColor="@android:color/white"
             android:textSize="@dimen/ts_30"
             android:textStyle="bold" />
-
+ <TextView
+            android:id="@+id/tvtalk1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:gravity="left|bottom"
+            android:textAlignment="gravity"
+            android:paddingLeft="@dimen/vs_20"      
+            android:layout_weight="1"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/ts_24"
+            tools:text="111111111111111" />  
+        
         <TextView
             android:id="@+id/tvDate"
             android:layout_width="@dimen/vs_0"
