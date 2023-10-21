@@ -74,6 +74,7 @@ public class HomeActivity extends BaseActivity {
     private LinearLayout contentLayout;
     private TextView tvDate;
     private TextView tvName;
+    private TextView tvtalk1;
     private TvRecyclerView mGridView;
     private NoScrollViewPager mViewPager;
     private SourceViewModel sourceViewModel;
@@ -125,6 +126,7 @@ public class HomeActivity extends BaseActivity {
     private void initView() {
         this.topLayout = findViewById(R.id.topLayout);
         this.tvDate = findViewById(R.id.tvDate);
+        this.tvtalk1 = findViewById(R.id.tvtalk1);
         this.tvName = findViewById(R.id.tvName);
         this.contentLayout = findViewById(R.id.contentLayout);
         this.mGridView = findViewById(R.id.mGridView);
@@ -259,6 +261,39 @@ public class HomeActivity extends BaseActivity {
     private boolean jarInitOk = false;
 
     private void initData() {
+  //    首页增加每日一言      
+            String tvtalurl = ApiConfig.get().daily_sentence;            
+            UrlHttpUtil.get(tvtalurl, new CallBackUtil.CallBackString() {
+                   public void onFailure(int i, String str) {
+                        tvtalk1.setText(ApiConfig.get().daily_sentence);  
+                        }
+                   public void onResponse(String paramString) {
+                        Log.d("返回的EPG信息", paramString);
+                        try { 
+                            if (paramString.contains("hitokoto")) {
+                                JSONObject jsonObject = new JSONObject (paramString);
+                                String value = jsonObject.optString("hitokoto") + " — " +jsonObject.optString("from_who");
+                                tvtalk1.setText(value);
+                             } else {
+                                     tvtalk1.setText(ApiConfig.get().daily_sentence); 
+                                    }  
+                        }catch (Exception e) {
+                         e.printStackTrace();
+                       } 
+                   }    
+          }); 
+        
+       tvtalk1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //获取剪切板管理器
+                ClipboardManager cm = (ClipboardManager)getSystemService(mContext.CLIPBOARD_SERVICE);
+                //设置内容到剪切板
+                cm.setPrimaryClip(ClipData.newPlainText(null, tvtalk1.getText().toString().replace("新版地址点击复制 ","")));
+                Toast.makeText(HomeActivity.this, "已复制到剪切板！", Toast.LENGTH_SHORT).show();
+            }
+        });   
+        
         SourceBean home = ApiConfig.get().getHomeSourceBean();
         if (home != null && home.getName() != null && !home.getName().isEmpty())
             tvName.setText(home.getName());
